@@ -1,19 +1,38 @@
 'use client';
 import React, { useState } from 'react';
 import { useUserContext } from '@/context/UserContext';
-import { Users, FileText, Search, AlertCircle, Bell } from 'lucide-react';
+import { AlertCircle, FileText, Search, Bell } from 'lucide-react';
 import Image from 'next/image';
-import '@/styles/welcom.css';
 import Link from 'next/link';
+import '@/styles/welcom.css';
 import { FaUserCircle, FaFacebookF, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+
+interface Notification {
+  id: number;
+  title: string;
+  link: string;
+}
 
 export default function WelcomePage() {
   const { user } = useUserContext();
+
+  // Commentaires
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [submittedComments, setSubmittedComments] = useState<
     { text: string; rating: number; user: string }[]
   >([]);
+
+  // Recherche
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  // Notifications
+  const [showNotifications, setShowNotifications] = useState(false);
+  const notifications: Notification[] = [
+    { id: 1, title: 'Signalement Vol de vélo traité', link: '/suivi' },
+    { id: 2, title: 'Agression signalée le 20/12', link: '/suivi' },
+  ];
 
   const handleCommentSubmit = () => {
     if (!comment) return;
@@ -39,12 +58,58 @@ export default function WelcomePage() {
             <li>
               <Link href="/suivi" className="menu-link"><FileText size={18} /> Suivi</Link>
             </li>
-            <li>
-              <Link href="/recherche" className="menu-link"><Search size={18} /> Recherche</Link>
+
+            {/* RECHERCHE : champ qui apparaît au hover */}
+            <li
+              className="menu-link search-link"
+              onMouseEnter={() => setShowSearch(true)}
+              onMouseLeave={() => setShowSearch(false)}
+            >
+              <Search size={18} /> Recherche
+              {showSearch && (
+                <div className="search-popup">
+                  <input
+                    type="text"
+                    placeholder="Tapez votre recherche..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <button onClick={() => alert(`Recherche pour : ${searchQuery}`)}>Rechercher</button>
+                </div>
+              )}
             </li>
-            <li>
-              <Link href="/notifications" className="menu-link"><Bell size={18} /> Notifications</Link>
+
+            {/* NOTIFICATIONS : mini panneau */}
+            <li
+              className="menu-link notification-link"
+              onMouseEnter={() => setShowNotifications(true)}
+              onMouseLeave={() => setShowNotifications(false)}
+            >
+              <Bell size={18} /> Notifications
+              {notifications.length > 0 && <span className="notif-count">{notifications.length}</span>}
+              {showNotifications && (
+                <div className="notifications-popup">
+                  {notifications.length === 0 ? (
+                    <p>Aucune notification.</p>
+                  ) : (
+                    <ul>
+                      {notifications.map(n => (
+                        <li key={n.id}>
+                          <Link href={n.link}>{n.title}</Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
             </li>
+
+            {/* Lien Admin uniquement pour les admins */}
+            {user.role === 'admin' && (
+              <li>
+                <Link href="/admin" className="menu-link">Dashboard Admin</Link>
+              </li>
+            )}
           </ul>
 
           {/* Profil + Déconnexion */}
@@ -130,9 +195,6 @@ export default function WelcomePage() {
             <li>Téléphone : <a href="tel:+33559982222">+33 5 59 98 22 22</a></li>
             <li>Adresse : 5 rue O'Quin 64000 Pau, France</li>
           </ul>
-            <br />
-            <br />
-            
           <div className="socials">
             <h3>Suivez-nous sur :</h3>
             <ul className="social-links">

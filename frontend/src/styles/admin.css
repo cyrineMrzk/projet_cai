@@ -1,0 +1,51 @@
+.admin-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f5f7ff;
+  min-height: 100vh;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-header nav a {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.admin-main {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.admin-table th, .admin-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #667eea;
+  color: white;
+}
+
+.admin-table select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}

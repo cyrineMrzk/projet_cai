@@ -1,14 +1,23 @@
 'use client';
 import { createContext, useContext } from 'react';
 
-const UserContext = createContext({
-  user: { name: 'Utilisateur Test', role: 'user' }
+interface User {
+  name: string;
+  role: 'admin' | 'police' | 'user';
+}
+
+interface UserContextType {
+  user: User;
+}
+
+const UserContext = createContext<UserContextType>({
+  user: { name: 'Utilisateur Test', role: 'user' },
 });
 
 export const useUserContext = () => useContext(UserContext);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const user = { name: 'Utilisateur Test', role: 'admin' }; // mock
+  const user: User = { name: 'Utilisateur Test', role: 'admin' }; // mock admin
 
   return (
     <UserContext.Provider value={{ user }}>
